@@ -1,0 +1,27 @@
+{
+  "name": "users-service",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc && node ./dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/newknow/technical-test/users-service"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {},
+  "dependencies": {
+    "@newknow/base-service": "latest",
+    "@types/koa": "^2.0.46",
+    "@types/koa-router": "^7.0.29",
+    "@types/node": "9",
+    "koa": "^2.5.1",
+    "koa-router": "^7.4.0",
+    "pg": "latest",
+    "pm2": "latest",
+    "typescript": "^2.9.2"
+  }
+}
