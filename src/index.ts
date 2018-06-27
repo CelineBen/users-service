@@ -1,8 +1,9 @@
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
+import * as bodyParser from 'koa-bodyparser';
 
 const app = new Koa();
-var router = new Router();
+const router = new Router();
 
 router.get('/health', (ctx: any, next: Function) => {
   ctx.response.status = 200;
@@ -10,6 +11,7 @@ router.get('/health', (ctx: any, next: Function) => {
 });
 
 app
+  .use(bodyParser())
   .use(router.routes())
   .use(router.allowedMethods());
 
