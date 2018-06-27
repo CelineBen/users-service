@@ -14,6 +14,11 @@ router.get('/health', (ctx: any, next: Function) => {
 
 router.post('/users', required(['username', 'password']), userController.create);
 
+app.on('error', (ctx: any) => {
+  ctx.response.status = 500;
+  ctx.response.body = 'Internal Server Error';
+});
+
 app
   .use(bodyParser())
   .use(router.routes())
