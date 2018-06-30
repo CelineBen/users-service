@@ -1,11 +1,14 @@
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
 import * as bodyParser from 'koa-bodyparser';
-import * as userController from './controllers/user-controller';
+import * as userController from './user-controller';
 import required from './middlewares/required-params';
+import startDB from './database';
 
 const app = new Koa();
 const router = new Router();
+
+startDB();
 
 router.get('/health', (ctx: any, next: Function) => {
   ctx.response.status = 200;
@@ -13,6 +16,9 @@ router.get('/health', (ctx: any, next: Function) => {
 });
 
 router.post('/users', required(['username', 'password']), userController.create);
+
+process.on('uncaughtException', () => process.exit());
+process.on('unhandledRejection', () => process.exit());
 
 app.on('error', (ctx: any) => {
   ctx.response.status = 500;
