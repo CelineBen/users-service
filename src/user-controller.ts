@@ -10,12 +10,15 @@ const STATUS_CODE_SERVER_ERROR = 500;
 export async function create(ctx: Koa.Context, next: any) {
   try {
     const userData = _.get(ctx, 'request.body', {});
+
     if (await userExists(userData.username)) {
       ctx.response.status = STATUS_CODE_UNPROCESSABLE_ENTITY;
       ctx.response.body = 'Username already in use';
       return;
     }
+
     const user = await createUser(userData);
+    user.password = undefined;
     ctx.response.status = STATUS_CODE_CREATED;
     ctx.response.body = user;
   } catch (e) {
