@@ -16,6 +16,7 @@ router.get('/health', (ctx: any, next: Function) => {
 });
 
 router.post('/users', required(['username', 'password']), userController.create);
+router.post('/session', required(['username', 'password']), userController.authenticate);
 
 process.on('uncaughtException', () => process.exit());
 process.on('unhandledRejection', () => process.exit());

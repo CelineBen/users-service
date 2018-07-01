@@ -16,6 +16,7 @@
   "dependencies": {
     "@types/koa": "^2.0.46",
     "@types/koa-router": "^7.0.29",
+    "bcrypt": "^2.0.1",
     "koa": "^2.5.1",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",

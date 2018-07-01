@@ -1,5 +1,7 @@
 import * as mongoose from 'mongoose';
 import * as _ from 'lodash';
+import * as bcrypt from 'bcrypt';
+
 const Schema = mongoose.Schema;
 const UserSchema = new Schema({
   username: {
@@ -12,12 +14,20 @@ const UserSchema = new Schema({
   }
 });
 
+const SALT_ROUNDS = 10;
+
 const User = mongoose.model('User', UserSchema);
 
 export async function createUser(userData) {
   const user = new User(userData);
+  user.password = await bcrypt.hash(user.password, SALT_ROUNDS);
   await user.save();
   return user;
+}
+
+export async function isValidPassword(username, givenPassword) {
+  const user = await User.findOne({ username });
+  return bcrypt.compare(givenPassword, user.password);
 }
 
 export async function userExists(username: String): Promise<boolean> {
