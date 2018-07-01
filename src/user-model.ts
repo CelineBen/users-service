@@ -30,7 +30,6 @@ export async function isValidPassword(username, givenPassword) {
   return bcrypt.compare(givenPassword, user.password);
 }
 
-export async function userExists(username: String): Promise<boolean> {
-  const user = await User.findOne({ username });
-  return !_.isEmpty(user);
+export function getByUsername(username: String) {
+  return User.findOne({ username });
 }

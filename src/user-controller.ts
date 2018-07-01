@@ -1,6 +1,8 @@
 import * as Koa from 'koa';
 import * as _ from 'lodash';
-import { userExists, createUser, isValidPassword } from './user-model';
+import * as fs from 'fs';
+import * as jwt from 'jsonwebtoken';
+import { getByUsername, createUser, isValidPassword } from './user-model';
 
 const STATUS_CODE_CREATED = 201;
 const STATUS_CODE_OK = 200;
@@ -10,8 +12,9 @@ const STATUS_CODE_SERVER_ERROR = 500;
 export async function create(ctx: Koa.Context, next: any) {
   try {
     const userData = _.get(ctx, 'request.body', {});
+    const existingUser = getByUsername(userData.username);
 
-    if (await userExists(userData.username)) {
+    if (!_.isEmpty(existingUser)) {
       ctx.response.status = STATUS_CODE_UNPROCESSABLE_ENTITY;
       ctx.response.body = 'Username already in use';
       return;
@@ -30,9 +33,9 @@ export async function create(ctx: Koa.Context, next: any) {
 export async function authenticate(ctx: Koa.Context, next: any) {
   try {
     const userData = _.get(ctx, 'request.body', {});
-    const validUsername = await userExists(userData.username);
+    const user = await getByUsername(userData.username);
 
-    if (!validUsername) {
+    if (_.isEmpty(user)) {
       ctx.response.status = STATUS_CODE_UNPROCESSABLE_ENTITY;
       ctx.response.body = 'Username does not exist';
       return;
@@ -41,8 +44,10 @@ export async function authenticate(ctx: Koa.Context, next: any) {
     const validPassword = await isValidPassword(userData.username, userData.password);
 
     if (validPassword) {
+      const key = fs.readFileSync('private.key');
+      const token = jwt.sign({ username: user.username, _id: user._id }, key);
       ctx.response.status = STATUS_CODE_OK;
-      ctx.response.body = 'token';
+      ctx.response.body = token;
     } else {
       ctx.response.status = STATUS_CODE_UNPROCESSABLE_ENTITY;
       ctx.response.body = 'Invalid password';
