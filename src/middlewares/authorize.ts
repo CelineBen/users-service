@@ -21,5 +21,6 @@ export default () => async (ctx: Koa.Context, next: any) => {
     }
   } catch(e) {
     ctx.response.status = STATUS_CODE_UNAUTHORIZED;
+    console.log(`Error verifying Auth Token: ${e.message}`);
   }
 };
