@@ -1,5 +1,4 @@
 import * as mongoose from 'mongoose';
-import * as _ from 'lodash';
 import * as bcrypt from 'bcrypt';
 
 const Schema = mongoose.Schema;
@@ -32,4 +31,8 @@ export async function isValidPassword(username, givenPassword) {
 
 export function getByUsername(username: String) {
   return User.findOne({ username });
+}
+
+export function getUsers() {
+  return User.find({}, '_id username');
 }

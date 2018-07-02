@@ -2,7 +2,7 @@ import * as Koa from 'koa';
 import * as _ from 'lodash';
 import * as fs from 'fs';
 import * as jwt from 'jsonwebtoken';
-import { getByUsername, createUser, isValidPassword } from './user-model';
+import { getUsers, getByUsername, createUser, isValidPassword } from './user-model';
 
 const STATUS_CODE_CREATED = 201;
 const STATUS_CODE_OK = 200;
@@ -54,7 +54,18 @@ export async function authenticate(ctx: Koa.Context, next: any) {
     }
 
   } catch (e) {
-    ctx.response.status = 500;
+    ctx.response.status = STATUS_CODE_SERVER_ERROR;
     ctx.response.body = `Error while trying to authenticate the user: ${e.message}`;
+  }
+}
+
+export async function get(ctx: Koa.Context, next: any) {
+  try {
+    const users = await getUsers();
+    ctx.response.status = STATUS_CODE_OK;
+    ctx.response.body = users;
+  } catch (e) {
+    ctx.response.status = STATUS_CODE_SERVER_ERROR;
+    ctx.response.body = `Error while getting the users: ${e.message}`;
   }
 }
