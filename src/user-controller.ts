@@ -12,7 +12,7 @@ const STATUS_CODE_SERVER_ERROR = 500;
 export async function create(ctx: Koa.Context, next: any) {
   try {
     const userData = _.get(ctx, 'request.body', {});
-    const existingUser = getByUsername(userData.username);
+    const existingUser = await getByUsername(userData.username);
 
     if (!_.isEmpty(existingUser)) {
       ctx.response.status = STATUS_CODE_UNPROCESSABLE_ENTITY;
